@@ -83,3 +83,26 @@ Core Shinobi is the elite team within ByteBloom Academy, combining Core, which r
 foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence,
 speed, and the ability to break through the toughest problems with creative solutions.
 
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
+##############
