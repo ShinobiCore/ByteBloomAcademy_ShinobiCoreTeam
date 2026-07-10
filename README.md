@@ -1,9 +1,8 @@
-# ByteBloomAcademy_ShinobiCoreTeam
+# ByteBloomAcademy ShinobiCoreTeam
 
 Core Shinobi is the elite team within ByteBloom Academy, combining Core, which represents the heart of the system, the foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence, speed, and the ability to break through the toughest problems with creative solutions.
- ## Member 11  
-## yasmeen
-## Member 2 - Clean Code Standards
+
+## Clean Code Standards
 
 Responsible for defining clean code standards to ensure consistency, readability, and maintainability across the team's
 codebase.
@@ -47,13 +46,11 @@ Ensure that all code written by the team is unified, readable, and easy to maint
 
 **2. Daily Stand-up Meetings:**
 
-* We will have a short 15-minute meeting every day at [Write Time Here, e.g., 8:00 PM].
+* We will have a short 15-minute meeting every day at  12:00 َAM.
 * Each member will quickly answer three questions:
 1. What did I do yesterday?
 2. What will I do today?
 3. Do I have any blockers or problems?
-
-
 
 **3. Peer Review SLAs (Service Level Agreements):**
 
@@ -82,27 +79,3 @@ To keep our repository clean and avoid merge conflicts with local settings, our 
 Core Shinobi is the elite team within ByteBloom Academy, combining Core, which represents the heart of the system, the
 foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence,
 speed, and the ability to break through the toughest problems with creative solutions.
-
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
-##############
