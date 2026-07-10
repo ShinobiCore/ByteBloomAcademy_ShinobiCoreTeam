@@ -74,7 +74,7 @@ To keep our repository clean and avoid merge conflicts with local settings, our 
 * **Gradle Files:** `.gradle/`, `build/` (These are generated automatically).
 * **IDE Files:** `.idea/`, `*.iml` (IntelliJ IDEA or Android Studio local workspace settings).
 * **Local Configs:** `local.properties` (Contains local device paths or private keys that should not be shared).
-=======
+---
 
 Core Shinobi is the elite team within ByteBloom Academy, combining Core, which represents the heart of the system, the
 foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence,
