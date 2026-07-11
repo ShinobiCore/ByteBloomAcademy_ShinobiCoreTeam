@@ -1,4 +1,4 @@
-# ByteBloomAcademy_ShinobiCoreTeam
+# ByteBloomAcademy ShinobiCoreTeam
 
 Core Shinobi is the elite team within ByteBloom Academy, combining Core, which represents the heart of the system, the foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence, speed, and the ability to break through the toughest problems with creative solutions.
 
@@ -39,7 +39,8 @@ The Workflow Architect is responsible for creating the dedicated workflow branch
 ### Summary
 
 The Workflow Architect establishes the foundational rules that ensure speed through simplified branching, quality through mandatory peer review, transparency through standardized commit messages, and professionalism through clear conflict resolution protocols.
-## Member 2 - Clean Code Standards
+
+## Clean Code Standards
 
 Responsible for defining clean code standards to ensure consistency, readability, and maintainability across the team's
 codebase.
@@ -83,20 +84,17 @@ Ensure that all code written by the team is unified, readable, and easy to maint
 
 **2. Daily Stand-up Meetings:**
 
-* We will have a short 15-minute meeting every day at [Write Time Here, e.g., 8:00 PM].
+* We will have a short 15-minute meeting every day at  12:00 َAM.
 * Each member will quickly answer three questions:
 1. What did I do yesterday?
 2. What will I do today?
 3. Do I have any blockers or problems?
-
-
 
 **3. Peer Review SLAs (Service Level Agreements):**
 
 * When a team member opens a Pull Request (PR), it must be reviewed within **24 hours**.
 * We strictly require at least **two approvals** from teammates before any code is merged into the `main` branch.
 
----
 
 ### Architecture & Ignores
 
@@ -113,9 +111,7 @@ To keep our repository clean and avoid merge conflicts with local settings, our 
 * **Gradle Files:** `.gradle/`, `build/` (These are generated automatically).
 * **IDE Files:** `.idea/`, `*.iml` (IntelliJ IDEA or Android Studio local workspace settings).
 * **Local Configs:** `local.properties` (Contains local device paths or private keys that should not be shared).
-=======
 
 Core Shinobi is the elite team within ByteBloom Academy, combining Core, which represents the heart of the system, the
 foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence,
 speed, and the ability to break through the toughest problems with creative solutions.
-
