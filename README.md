@@ -46,7 +46,7 @@ Ensure that all code written by the team is unified, readable, and easy to maint
 
 **2. Daily Stand-up Meetings:**
 
-* We will have a short 15-minute meeting every day at  12:00 َAM.
+* We will have a short 15-minute meeting every day at  12:00 PM.
 * Each member will quickly answer three questions:
 1. What did I do yesterday?
 2. What will I do today?
