@@ -79,3 +79,9 @@ To keep our repository clean and avoid merge conflicts with local settings, our 
 Core Shinobi is the elite team within ByteBloom Academy, combining Core, which represents the heart of the system, the
 foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence,
 speed, and the ability to break through the toughest problems with creative solutions.
+
+
+1. Development & Database Environment
+* **Language & Framework:** Kotlin (Clean Architecture)
+* **Database Management:** MS SQL Server & SQLite for local/testing environments.
+* **IDE & Tools:** IntelliJ IDEA & Git..
