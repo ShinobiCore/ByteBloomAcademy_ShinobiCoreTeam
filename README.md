@@ -82,4 +82,4 @@ speed, and the ability to break through the toughest problems with creative solu
 1. Development & Database Environment
 * **Language & Framework:** Kotlin (Clean Architecture)
 * **Database Management:** MS SQL Server & SQLite for local/testing environments.
-* **IDE & Tools:** IntelliJ IDEA & Git.
+* **IDE & Tools:** IntelliJ IDEA & Git..
