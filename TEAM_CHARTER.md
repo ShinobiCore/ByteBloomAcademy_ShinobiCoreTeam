@@ -2,8 +2,6 @@
 
 Core Shinobi is the elite team within ByteBloom Academy, combining Core, which represents the heart of the system, the foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence, speed, and the ability to break through the toughest problems with creative solutions.
 
----
-
 ## 1. Workflow Architect
 
 The Workflow Architect serves as the organizational backbone of the ShinobiCoreTeam, responsible for designing the infrastructure that ensures smooth project workflow across all four team members.
