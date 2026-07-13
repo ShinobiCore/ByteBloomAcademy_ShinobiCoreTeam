@@ -1,0 +1,17 @@
+# IntelliJ IDEA / Android Studio
+.idea/
+*.iml
+*.iws
+out/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin
+*.class
+
+# OS Specifi
+.DS_Store
+Thumbs.db

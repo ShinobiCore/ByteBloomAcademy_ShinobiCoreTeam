@@ -84,7 +84,7 @@ Ensure that all code written by the team is unified, readable, and easy to maint
 
 **2. Daily Stand-up Meetings:**
 
-* We will have a short 15-minute meeting every day at  12:00 َAM.
+* We will have a short 15-minute meeting every day at  12:00 PM.
 * Each member will quickly answer three questions:
 1. What did I do yesterday?
 2. What will I do today?
@@ -115,3 +115,9 @@ To keep our repository clean and avoid merge conflicts with local settings, our 
 Core Shinobi is the elite team within ByteBloom Academy, combining Core, which represents the heart of the system, the
 foundation of programming, and the depth of software engineering, with Shinobi, which reflects skill, intelligence,
 speed, and the ability to break through the toughest problems with creative solutions.
+
+
+1. Development & Database Environment
+* **Language & Framework:** Kotlin (Clean Architecture)
+* **Database Management:** MS SQL Server & SQLite for local/testing environments.
+* **IDE & Tools:** IntelliJ IDEA & Git..
