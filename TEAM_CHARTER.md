@@ -54,7 +54,7 @@ Responsible for defining clean code standards to ensure consistency, readability
 * We use **GitHub Issues** and **Pull Request comments** exclusively for technical discussions and code reviews.
 
 ### Daily Stand-up Meetings
-* We will have a short 15-minute meeting every day at **12:00 AM**.
+* We will have a short 15-minute meeting every day at **12:00 PM**.
 * Each member will quickly answer three key questions:
     1. What did I do yesterday?
     2. What will I do today?
