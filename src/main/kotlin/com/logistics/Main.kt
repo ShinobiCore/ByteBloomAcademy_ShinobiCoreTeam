@@ -1,9 +1,7 @@
 package com.logistics
 
 import com.logistics.dataholder.Package
-// import com.logistics.models.Warehouse
-// import com.logistics.models.Route
-import com.logistics.parsers.parseFleetFile
+import com.logistics.parsers.parseVehicleFile
 import com.logistics.utils.selectionSortPackages
 
 fun main() {
@@ -18,7 +16,7 @@ fun main() {
     // ==========================================
     // 2. Parse Actual Fleet Data (Your Task)
     // ==========================================
-    val (validFleet, fleetWarnings) = parseFleetFile("src/main/resources/fleet.csv")
+    val (validFleet, fleetWarnings) = parseVehicleFile("src/main/resources/fleet.csv")
 
 
     // ==========================================

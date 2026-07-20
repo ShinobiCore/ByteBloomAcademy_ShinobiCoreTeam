@@ -1,6 +1,6 @@
 package com.logistics.parsers
 
-import com.logistics.dataholder.Fleet
+import com.logistics.dataholder.Vehicle
 import java.io.File
 
 private const val EXPECTED_COLUMN_COUNT = 4
@@ -8,19 +8,19 @@ private const val VEHICLE_ID_PREFIX = "TRK-"
 private const val INVALID_NUMBER_FALLBACK = -1.0
 
 /**
- * Parses a CSV file containing fleet data and converts it into a list of [Fleet] objects.
+ * Parses a CSV file containing vehicle data and converts it into a list of [Vehicle] objects.
  * Returns a Pair where:
- * - first: List of valid Fleet objects.
+ * - first: List of valid Vehicle objects.
  * - second: List of warning messages for skipped rows.
  */
-fun parseFleetFile(filePath: String): Pair<List<Fleet>, List<String>> {
+fun parseVehicleFile(filePath: String): Pair<List<Vehicle>, List<String>> {
     val file = File(filePath)
 
     if (!file.exists()) {
         return Pair(emptyList(), listOf("Critical Error: File '$filePath' not found."))
     }
 
-    val validFleets = mutableListOf<Fleet>()
+    val validVehicles = mutableListOf<Vehicle>()
     val warnings = mutableListOf<String>()
 
     file.useLines { lines ->
@@ -41,25 +41,25 @@ fun parseFleetFile(filePath: String): Pair<List<Fleet>, List<String>> {
             }
 
             // Extract row parsing to keep the main loop readable
-            val fleet = parseSingleRow(line, lineNumber, warnings)
-            if (fleet != null) {
-                validFleets.add(fleet)
+            val vehicle = parseSingleRow(line, lineNumber, warnings)
+            if (vehicle != null) {
+                validVehicles.add(vehicle)
             }
 
             lineNumber++
         }
     }
 
-    return Pair(validFleets, warnings)
+    return Pair(validVehicles, warnings)
 }
 
 /**
- * Attempts to parse a single CSV row into a Fleet object.
+ * Attempts to parse a single CSV row into a vehicle object.
  * Modifies the [warnings] list directly if validation fails (acting as an error collector).
  *
- * @return A valid [Fleet] object, or null if the row is invalid.
+ * @return A valid [Vehicle] object, or null if the row is invalid.
  */
-private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<String>): Fleet? {
+private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<String>): Vehicle? {
     val columns = line.split(",")
         .map { it.trim() }
         .dropLastWhile { it.isEmpty() }
@@ -91,5 +91,5 @@ private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<
 
     val costPerKm = costRaw.toDoubleOrNull() ?: INVALID_NUMBER_FALLBACK
 
-    return Fleet(vehicleId, hubIdRaw, capacity, costPerKm)
+    return Vehicle(vehicleId, hubIdRaw, capacity, costPerKm)
 }
