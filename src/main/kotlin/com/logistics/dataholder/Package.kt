@@ -1,4 +1,4 @@
-package com.logistics.models
+package com.logistics.dataholder
 
 data class Package(
     val packageId: String,
