@@ -1,6 +1,6 @@
 package com.logistics.utils
 
-import com.logistics.models.Package
+import com.logistics.dataholder.Package
 
 /**
  * Helper function to convert text-based priority into numerical values.
@@ -39,7 +39,6 @@ private fun isFirstGreater(p1: Package, p2: Package): Boolean {
  * @return A new list sorted by priority and weight.
  */
 fun selectionSortPackages(packages: List<Package>): List<Package> {
-    // Create a mutable copy to avoid altering the original data
     val sortedList = packages.toMutableList()
     val n = sortedList.size
 
