@@ -1,6 +1,6 @@
 package com.logistics.parsers
 
-import com.logistics.models.Route
+import com.logistics.dataholder.Route
 import java.io.File
 import java.io.IOException
 
