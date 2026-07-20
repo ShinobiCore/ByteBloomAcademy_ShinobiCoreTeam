@@ -1,6 +1,6 @@
 package com.logistics
 
-import com.logistics.models.Package
+import com.logistics.dataholder.Package
 // import com.logistics.models.Warehouse
 // import com.logistics.models.Route
 import com.logistics.parsers.parseFleetFile

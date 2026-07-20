@@ -1,6 +1,6 @@
 package com.logistics.parsers
 
-import com.logistics.models.Fleet
+import com.logistics.dataholder.Fleet
 import java.io.File
 
 /**
