@@ -3,32 +3,28 @@ package com.logistics.utils
 import com.logistics.dataholder.Package
 
 /**
- * Helper function to convert text-based priority into numerical values.
- * Higher numbers represent higher priorities to facilitate descending sorting.
+ * Extension function to convert text-based priority into numerical values.
  */
-private fun getPriorityValue(priority: String): Int {
-    return when (priority.uppercase()) {
-        "URGENT" -> 3
-        "STANDARD" -> 2
-        "LOW" -> 1
-        else -> 1 // Unknown priorities default to LOW as per requirements
-    }
+private fun String.toPriorityValue(): Int = when (this.uppercase()) {
+    "URGENT" -> 3
+    "STANDARD" -> 2
+    "LOW" -> 1
+    else -> 1
 }
 
 /**
- * Compares two packages to determine which one should appear first.
- * Sorting criteria: Priority first (descending), then Weight (descending).
+ * Compares two packages. Returns true if the first package has higher priority,
+ * or same priority but higher weight.
  */
 private fun isFirstGreater(p1: Package, p2: Package): Boolean {
-    val priority1 = getPriorityValue(p1.priority)
-    val priority2 = getPriorityValue(p2.priority)
+    val priority1 = p1.priority.toPriorityValue()
+    val priority2 = p2.priority.toPriorityValue()
 
-    // 1. Compare by priority first
-    if (priority1 > priority2) return true
-    if (priority1 < priority2) return false
-
-    // 2. If priorities are equal, fallback to comparing by weight
-    return p1.weight > p2.weight
+    return when {
+        priority1 > priority2 -> true
+        priority1 < priority2 -> false
+        else -> p1.weight > p2.weight
+    }
 }
 
 /**
@@ -43,13 +39,9 @@ fun selectionSortPackages(packages: List<Package>): List<Package> {
     val n = sortedList.size
 
     for (i in 0 until n - 1) {
-        // Assume the current element is the largest
         var maxIndex = i
 
         for (j in i + 1 until n) {
-            // We strictly use (>) instead of (>=).
-            // This ensures "Stability" by preventing swaps between equal elements,
-            // keeping them in their original read order.
             if (isFirstGreater(sortedList[j], sortedList[maxIndex])) {
                 maxIndex = j
             }
