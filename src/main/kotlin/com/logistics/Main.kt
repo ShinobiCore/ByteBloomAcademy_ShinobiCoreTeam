@@ -28,8 +28,6 @@ fun main() {
     println("Packages parsed: ${validPackages.size}")
     println("Fleet parsed: ${validFleet.size}")
     println()
-
-
     // ==========================================
     // 4. Sort Packages and Print Top 3
     // ==========================================
