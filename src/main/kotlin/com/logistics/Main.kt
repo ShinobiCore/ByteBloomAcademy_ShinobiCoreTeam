@@ -4,7 +4,7 @@ import com.logistics.dataholder.Package
 import com.logistics.utils.selectionSortPackages
 
 import com.logistics.parsers.parseVehicleFile
-import com.logistics.parsers.parse
+import com.logistics.parsers.parseRoute
 import com.logistics.parsers.parsePackagesFromCsv
 import java.io.File
 
@@ -16,7 +16,7 @@ private const val TOP_PACKAGES_DISPLAY_LIMIT = 3
 fun main() {
     // 1. Load and parse data
     val validPackages = loadPackages(PACKAGES_FILE_PATH)
-    val routesData = parse(ROUTES_FILE_PATH)
+    val routesData = parseRoute(ROUTES_FILE_PATH)
     val (validFleet, fleetWarnings) = parseVehicleFile(FLEET_FILE_PATH)
 
     // 2. Display summary
