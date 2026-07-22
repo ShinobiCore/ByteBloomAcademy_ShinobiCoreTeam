@@ -9,7 +9,7 @@ data class RouteParseResult(
     val warnings: List<String>
 )
 
-fun parse(filePath: String): RouteParseResult {
+fun parseRoute(filePath: String): RouteParseResult {
 
     val warnings = mutableListOf<String>()
     val routes = mutableListOf<Route>()
