@@ -1,34 +1,29 @@
 package com.logistics.parsers
 
-import com.logistics.dataholder.Route
+import com.logistics.dataholder.RouteRaw
+import com.logistics.utils.isBlankLine
+import com.logistics.utils.splitAndTrimCsvLine
 import java.io.File
-import java.io.IOException
 
 data class RouteParseResult(
-    val routes: List<Route>,
-    val warnings: List<String>
+    val routes: List<RouteRaw>, val warnings: List<String>
 )
 
-fun parseRoute(filePath: String): RouteParseResult {
+fun parseRouteFile(filePath: String): RouteParseResult {
 
     val warnings = mutableListOf<String>()
-    val routes = mutableListOf<Route>()
+    val routes = mutableListOf<RouteRaw>()
 
-    val lines = readFile(filePath, warnings)
-        ?: return RouteParseResult(routes, warnings)
+    val lines = readFile(filePath, warnings) ?: return RouteParseResult(routes, warnings)
 
     for (index in 1 until lines.size) {
 
         val lineNumber = index + 1
         val rawLine = lines[index]
-        val line = rawLine.trim()
+        if (isBlankLine(rawLine)) continue
+        val parts = splitAndTrimCsvLine(rawLine)
 
-        if (line.isEmpty()) continue
-
-        val parts = splitAndCleanColumns(line)
-
-        if (!hasValidColumns(parts, lineNumber, warnings))
-            continue
+        if (!hasValidColumns(parts, lineNumber, warnings)) continue
 
         val routeId = parts[0].uppercase()
         val originHubId = parts[1]
@@ -38,32 +33,22 @@ fun parseRoute(filePath: String): RouteParseResult {
         val delayMinutes = parseDelay(parts[4], lineNumber, warnings)
 
         if (!isValidRoute(
-                routeId,
-                originHubId,
-                destinationHubId,
-                finalDistance,
-                lineNumber,
-                warnings
+                routeId, originHubId, destinationHubId, finalDistance, lineNumber, warnings
             )
         ) continue
 
-        val myRoute = Route(
-            routeId,
-            originHubId,
-            destinationHubId,
-            finalDistance,
-            delayMinutes
+        routes.add(
+            RouteRaw(
+                routeId, originHubId, destinationHubId, finalDistance, delayMinutes
+            )
         )
-
-        routes.add(myRoute)
     }
 
     return RouteParseResult(routes, warnings)
 }
 
 private fun readFile(
-    filePath: String,
-    warnings: MutableList<String>
+    filePath: String, warnings: MutableList<String>
 ): List<String>? {
 
     val file = File(filePath)
@@ -73,18 +58,12 @@ private fun readFile(
         return null
     }
 
-    return try {
-        file.readLines()
-    } catch (e: IOException) {
-        warnings.add("Fatal Error: Failed to read file $filePath -> ${e.message}")
-        null
-    }
+    return file.readLines()
+
 }
 
 private fun hasValidColumns(
-    parts: List<String>,
-    lineNumber: Int,
-    warnings: MutableList<String>
+    parts: List<String>, lineNumber: Int, warnings: MutableList<String>
 ): Boolean {
 
     if (parts.size != 5) {
@@ -96,9 +75,7 @@ private fun hasValidColumns(
 }
 
 private fun parseDistance(
-    distanceRaw: String,
-    lineNumber: Int,
-    warnings: MutableList<String>
+    distanceRaw: String, lineNumber: Int, warnings: MutableList<String>
 ): Double {
 
     val distanceCleaned = distanceRaw.removeSuffix("km")
@@ -112,9 +89,7 @@ private fun parseDistance(
 }
 
 private fun parseDelay(
-    delayRaw: String,
-    lineNumber: Int,
-    warnings: MutableList<String>
+    delayRaw: String, lineNumber: Int, warnings: MutableList<String>
 ): Int? {
 
     val delayMinutes = delayRaw.toIntOrNull()
@@ -158,13 +133,3 @@ private fun isValidRoute(
     return true
 }
 
-fun splitAndCleanColumns(line: String): List<String> {
-
-    val parts = line.split(",").map { it.trim() }.toMutableList()
-
-    while (parts.size > 1 && parts.last().isEmpty()) {
-        parts.removeAt(parts.size - 1)
-    }
-
-    return parts
-}

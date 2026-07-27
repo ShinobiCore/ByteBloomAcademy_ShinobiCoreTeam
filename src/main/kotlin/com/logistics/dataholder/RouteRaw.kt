@@ -1,6 +1,6 @@
 package com.logistics.dataholder
 
-data class Route(
+data class RouteRaw(
     val routeId: String,
     val originHubId: String,
     val destinationHubId: String,
