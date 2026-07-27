@@ -1,49 +1,61 @@
 package com.logistics.parsers
 
-import com.logistics.dataholder.Package
-import com.logistics.utils.splitAndTrimCsvLine
-import com.logistics.utils.isBlankLine
-import java.io.InputStream
+import com.logistics.dataholder.PackageParseResult
+import com.logistics.dataholder.PackageRaw
+import com.logistics.dataholder.Priority
+import com.logistics.utils.CsvUtils
 
-fun parsePackagesFromCsv(inputStream: InputStream): List<Package> {
-    val rawLines = inputStream.bufferedReader().readLines()
-    if (rawLines.isEmpty()) return emptyList()
-    return processDataLines(rawLines.drop(1))
-}
+object PackageParser {
 
-private fun processDataLines(dataLines: List<String>): List<Package> {
-    val validRecords = mutableListOf<Package>()
-    dataLines.forEachIndexed { index, line ->
-        parseSingleRow(line, lineNumber = index + 2)?.let { validRecords.add(it) }
+    fun parsePackageFile(filePath: String): PackageParseResult {
+        val rawLines = CsvUtils.readLinesWithoutHeader(filePath)
+        val packages = mutableListOf<PackageRaw>()
+        val warnings = mutableListOf<String>()
+
+        for ((index, line) in rawLines.withIndex()) {
+            val lineNumber = index + 2
+            processLine(line, lineNumber, packages, warnings)
+        }
+
+        return PackageParseResult(packages, warnings)
     }
-    return validRecords
-}
 
-private fun parseSingleRow(line: String, lineNumber: Int): Package? {
-    if (isBlankLine(line)) return null
-    val columns = splitAndTrimCsvLine(line)
-    if (columns.size < 4) return logAndSkip(lineNumber, "Missing columns")
-    return buildPackageFromColumns(columns) ?: logAndSkip(lineNumber, "Blank ID or Hub")
-}
+    private fun processLine(
+        line: String,
+        lineNumber: Int,
+        packages: MutableList<PackageRaw>,
+        warnings: MutableList<String>
+    ) {
+        if (line.isBlank()) return
 
-private fun buildPackageFromColumns(cols: List<String>): Package? {
-    val id = cols[0]
-    val hub = cols[3]
-    if (id.isEmpty() || hub.isEmpty()) return null
+        val tokens = CsvUtils.splitAndTrim(line)
+        if (isColumnMismatch(tokens)) {
+            warnings.add("Line $lineNumber: Missing required columns or destinationHubId missing.")
+            return
+        }
 
-    val weight = cols[1].toDoubleOrNull() ?: -1.0
-    val priority = parsePriorityOrDefault(cols[2])
-    return Package(packageId = id, weight = weight, priority = priority, destinationHub = hub)
-}
+        val pkg = buildPackageFromTokens(tokens)
+        packages.add(pkg)
+    }
 
-fun parsePriorityOrDefault(rawPriority: String): String {
-    val normalized = rawPriority.trim().uppercase()
-    if (normalized == "URGENT") return "URGENT"
-    if (normalized == "STANDARD") return "STANDARD"
-    return "LOW"
-}
+    private fun isColumnMismatch(tokens: List<String>): Boolean {
+        return tokens.size < 4 || tokens[0].isEmpty() || tokens[1].isEmpty()
+    }
 
-private fun logAndSkip(lineNumber: Int, reason: String): Package? {
-    println("Diagnostic Warning: Line $lineNumber skipped ($reason).")
-    return null
+    private fun buildPackageFromTokens(tokens: List<String>): PackageRaw {
+        val packageId = tokens[0]
+        val hubId = tokens[1]
+        val weight = CsvUtils.parseSafeDouble(tokens[2])
+        val priority = parsePriority(tokens[3])
+
+        return PackageRaw(packageId, hubId, weight, priority)
+    }
+
+    private fun parsePriority(rawPriority: String): Priority {
+        return when (rawPriority.uppercase()) {
+            "URGENT" -> Priority.URGENT
+            "STANDARD" -> Priority.STANDARD
+            else -> Priority.LOW
+        }
+    }
 }

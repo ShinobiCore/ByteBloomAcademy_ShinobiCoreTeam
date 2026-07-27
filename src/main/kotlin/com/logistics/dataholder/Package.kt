@@ -1,8 +1,19 @@
 package com.logistics.dataholder
 
-data class Package(
+enum class Priority {
+    URGENT,
+    STANDARD,
+    LOW
+}
+
+data class PackageRaw(
     val packageId: String,
-    val weight: Double,
-    val priority: String,
-    val destinationHub: String
+    val destinationHubId: String,
+    val weightKg: Double,
+    val priority: Priority
+)
+
+data class PackageParseResult(
+    val packages: List<PackageRaw>,
+    val warnings: List<String>
 )

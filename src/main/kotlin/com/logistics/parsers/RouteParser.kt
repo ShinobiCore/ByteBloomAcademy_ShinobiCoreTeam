@@ -11,6 +11,7 @@ data class RouteParseResult(
 
 fun parseRouteFile(filePath: String): RouteParseResult {
 
+
     val warnings = mutableListOf<String>()
     val routes = mutableListOf<RouteRaw>()
 
