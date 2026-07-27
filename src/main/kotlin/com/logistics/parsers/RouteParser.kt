@@ -1,8 +1,8 @@
 package com.logistics.parsers
 
 import com.logistics.dataholder.RouteRaw
-import com.logistics.utils.isBlankLine
-import com.logistics.utils.splitAndTrimCsvLine
+import com.logistics.utils.CsvUtils.isBlankLine
+import com.logistics.utils.CsvUtils.splitAndTrimCsvLine
 import java.io.File
 
 data class RouteParseResult(
