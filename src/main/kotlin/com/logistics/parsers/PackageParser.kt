@@ -45,10 +45,10 @@ object PackageParser {
     private fun buildPackageFromTokens(tokens: List<String>): PackageRaw {
         val packageId = tokens[0]
         val hubId = tokens[1]
-        val weight = CsvUtils.parseSafeDouble(tokens[2])
-        val priority = parsePriority(tokens[3])
+        val priority = parsePriority(tokens[2])
+        val weight = CsvUtils.parseSafeDouble(tokens[3])
 
-        return PackageRaw(packageId, hubId, weight, priority)
+        return PackageRaw(packageId = packageId, hubId, weight, priority = priority)
     }
 
     private fun parsePriority(rawPriority: String): Priority {
