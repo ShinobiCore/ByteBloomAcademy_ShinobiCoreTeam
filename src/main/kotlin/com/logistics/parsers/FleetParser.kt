@@ -1,95 +1,78 @@
 package com.logistics.parsers
 
+import com.logistics.dataholder.FleetParseResult
 import com.logistics.dataholder.Vehicle
+import com.logistics.utils.CsvUtils
 import java.io.File
 
-private const val EXPECTED_COLUMN_COUNT = 4
-private const val VEHICLE_ID_PREFIX = "TRK-"
-private const val INVALID_NUMBER_FALLBACK = -1.0
+object FleetParser {
 
-/**
- * Parses a CSV file containing vehicle data and converts it into a list of [Vehicle] objects.
- * Returns a Pair where:
- * - first: List of valid Vehicle objects.
- * - second: List of warning messages for skipped rows.
- */
-fun parseVehicleFile(filePath: String): Pair<List<Vehicle>, List<String>> {
-    val file = File(filePath)
+    private const val EXPECTED_COLUMN_COUNT = 4
+    private const val VEHICLE_ID_PREFIX = "TRK-"
 
-    if (!file.exists()) {
-        return Pair(emptyList(), listOf("Critical Error: File '$filePath' not found."))
-    }
+    fun parseVehicleFile(filePath: String): FleetParseResult {
+        val file = File(filePath)
 
-    val validVehicles = mutableListOf<Vehicle>()
-    val warnings = mutableListOf<String>()
-
-    file.useLines { lines ->
-        val iterator = lines.iterator()
-
-        if (!iterator.hasNext()) {
-            warnings.add("Warning: File '$filePath' is empty.")
-            return@useLines
+        if (!file.exists()) {
+            return FleetParseResult(emptyList(), listOf("Critical Error: File '$filePath' not found."))
         }
 
-        iterator.next() // Skip header row
+        val validVehicles = mutableListOf<Vehicle>()
+        val warnings = mutableListOf<String>()
 
-        var lineNumber = 2
-        for (line in iterator) {
-            if (line.isBlank()) {
-                lineNumber++
-                continue
-            }
+        val lines = file.readLines()
+        if (lines.isEmpty()) {
+            return FleetParseResult(emptyList(), listOf("Warning: File '$filePath' is empty."))
+        }
 
-            // Extract row parsing to keep the main loop readable
+        for ((index, line) in lines.drop(1).withIndex()) {
+            val lineNumber = index + 2
+            if (line.isBlank()) continue
+
             val vehicle = parseSingleRow(line, lineNumber, warnings)
             if (vehicle != null) {
                 validVehicles.add(vehicle)
             }
-
-            lineNumber++
         }
+
+        return FleetParseResult(validVehicles, warnings)
     }
 
-    return Pair(validVehicles, warnings)
+    private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<String>): Vehicle? {
+        val columns = CsvUtils.splitAndTrim(line)
+
+        if (columns.size != EXPECTED_COLUMN_COUNT) {
+            warnings.add("Warning at line $lineNumber: Invalid column count (${columns.size} instead of $EXPECTED_COLUMN_COUNT). Skipped.")
+            return null
+        }
+
+        val (vehicleIdRaw, hubIdRaw, capacityRaw, costRaw) = columns
+        val vehicleId = vehicleIdRaw.uppercase()
+
+        if (!vehicleId.startsWith(VEHICLE_ID_PREFIX)) {
+            warnings.add("Warning at line $lineNumber: Invalid Vehicle ID '$vehicleId'. Skipped.")
+            return null
+        }
+
+        if (hubIdRaw.isBlank()) {
+            warnings.add("Warning at line $lineNumber: Hub ID is empty. Skipped.")
+            return null
+        }
+
+        val capacity = CsvUtils.parseSafeDouble(capacityRaw)
+        if (capacity <= 0.0) {
+            warnings.add("Warning at line $lineNumber: Invalid max capacity '$capacityRaw'. Skipped.")
+            return null
+        }
+
+        val costPerKm = CsvUtils.parseSafeDouble(costRaw)
+
+        return Vehicle(vehicleId, hubIdRaw, capacity, costPerKm)
+    }
 }
 
-/**
- * Attempts to parse a single CSV row into a vehicle object.
- * Modifies the [warnings] list directly if validation fails (acting as an error collector).
- *
- * @return A valid [Vehicle] object, or null if the row is invalid.
- */
-private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<String>): Vehicle? {
-    val columns = line.split(",")
-        .map { it.trim() }
-        .dropLastWhile { it.isEmpty() }
-
-    // Guard clauses enforce fast failure and prevent deep nesting
-    if (columns.size != EXPECTED_COLUMN_COUNT) {
-        warnings.add("Warning at line $lineNumber: Invalid column count (${columns.size} instead of $EXPECTED_COLUMN_COUNT). Skipped.")
-        return null
-    }
-
-    val (vehicleIdRaw, hubIdRaw, capacityRaw, costRaw) = columns
-
-    val vehicleId = vehicleIdRaw.uppercase()
-    if (!vehicleId.startsWith(VEHICLE_ID_PREFIX)) {
-        warnings.add("Warning at line $lineNumber: Invalid Vehicle ID '$vehicleId'. Skipped.")
-        return null
-    }
-
-    if (hubIdRaw.isBlank()) {
-        warnings.add("Warning at line $lineNumber: Hub ID is empty. Skipped.")
-        return null
-    }
-
-    val capacity = capacityRaw.toDoubleOrNull() ?: INVALID_NUMBER_FALLBACK
-    if (capacity <= 0.0) {
-        warnings.add("Warning at line $lineNumber: Invalid max capacity '$capacityRaw'. Skipped.")
-        return null
-    }
-
-    val costPerKm = costRaw.toDoubleOrNull() ?: INVALID_NUMBER_FALLBACK
-
-    return Vehicle(vehicleId, hubIdRaw, capacity, costPerKm)
+// دالة توافقية مع Main القديم
+fun parseVehicleFile(filePath: String): Pair<List<Vehicle>, List<String>> {
+    val result = FleetParser.parseVehicleFile(filePath)
+    return Pair(result.vehicles, result.warnings)
 }

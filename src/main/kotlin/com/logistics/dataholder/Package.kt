@@ -6,14 +6,15 @@ enum class Priority {
     LOW
 }
 
-data class PackageRaw(
+data class Package(
     val packageId: String,
-    val destinationHubId: String,
-    val weightKg: Double,
-    val priority: Priority
+    val destinationHub: String,
+    val priority: Priority,
+    val weight: Double
 )
 
+//  تأكد من تسمية القائمة بـ packages هنا بالضبط:
 data class PackageParseResult(
-    val packages: List<PackageRaw>,
+    val packages: List<Package>,
     val warnings: List<String>
 )
