@@ -7,6 +7,10 @@ import com.logistics.data.parser.RouteParser
 import com.logistics.data.parser.VehicleParser
 import com.logistics.data.builder.DomainGraphBuilder
 import com.logistics.data.raw.PackageRaw
+import com.logistics.service.RoutePricingEngine
+import com.logistics.domain.strategy.EcoStrategy
+
+import java.util.Locale
 
 private const val PACKAGES_FILE_PATH = "src/main/resources/packages.csv"
 private const val WAREHOUSES_FILE_PATH = "src/main/resources/warehouses.csv"
@@ -57,6 +61,13 @@ fun main() {
     println("Warehouse -> Vehicle -> currentHub keeps same heap reference: $heapReferenceMatches")
     println()
 
+    val firstPackage = firstWarehouse.cargoQueue.first()
+    val firstRoute = firstWarehouse.outgoingRoutes.first()
+    val pricingEngine = RoutePricingEngine(EcoStrategy())
+    val ecoCost = pricingEngine.calculateTransitCost(firstPackage, firstRoute, firstVehicle)
+
+    println("Eco cost: ${formatMoney(ecoCost)}")
+
 }
 
 
@@ -83,4 +94,8 @@ private fun printTopPackages(packages: List<PackageRaw>, limit: Int) {
         println(output)
     }
     println()
+}
+
+private fun formatMoney(value: Double): String {
+    return "$" + String.format(Locale.US, "%.2f", value)
 }
