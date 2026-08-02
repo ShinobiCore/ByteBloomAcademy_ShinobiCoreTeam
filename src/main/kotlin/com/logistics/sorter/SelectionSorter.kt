@@ -1,6 +1,6 @@
 package com.logistics.sorter
 
-import com.logistics.dataholder.PackageRaw
+import com.logistics.data.raw.PackageRaw
 
 private fun isFirstGreater(p1: PackageRaw, p2: PackageRaw): Boolean {
     val priority1 = p1.priority
@@ -9,7 +9,7 @@ private fun isFirstGreater(p1: PackageRaw, p2: PackageRaw): Boolean {
     return when {
         priority1 > priority2 -> true
         priority1 < priority2 -> false
-        else -> p1.weightKg > p2.weightKg
+        else -> p1.weight > p2.weight
     }
 }
 

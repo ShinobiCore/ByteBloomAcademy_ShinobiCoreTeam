@@ -1,24 +1,23 @@
-package com.logistics.parsers
+package com.logistics.data.parser
 
-import com.logistics.dataholder.RouteParseResult
-import com.logistics.dataholder.RouteRaw
+import com.logistics.data.raw.RouteRaw
 import com.logistics.utils.CsvUtils
 import java.io.File
 
 object RouteParser {
 
-    fun parseRouteFile(filePath: String): RouteParseResult {
+    fun parseRouteFile(filePath: String): ParseResult<RouteRaw> {
         val warnings = mutableListOf<String>()
         val routes = mutableListOf<RouteRaw>()
 
         val file = File(filePath)
         if (!file.exists()) {
             warnings.add("Fatal Error: File not found at path: $filePath")
-            return RouteParseResult(routes, warnings)
+            return ParseResult(routes, warnings)
         }
 
         val lines = file.readLines()
-        if (lines.isEmpty()) return RouteParseResult(routes, warnings)
+        if (lines.isEmpty()) return ParseResult(routes, warnings)
 
         for (index in 1 until lines.size) {
             val lineNumber = index + 1
@@ -41,10 +40,10 @@ object RouteParser {
                 continue
             }
 
-            routes.add(RouteRaw(routeId, originHubId, destinationHubId, finalDistance, delayMinutes))
+            routes.add(RouteRaw(routeId, finalDistance, delayMinutes ?: 0, originHubId, destinationHubId))
         }
 
-        return RouteParseResult(routes, warnings)
+        return ParseResult(routes, warnings)
     }
 
     private fun isValidRoute(
@@ -70,6 +69,3 @@ object RouteParser {
         return true
     }
 }
-
-// دالة توافقية مع Main القديم
-fun parseRoute(filePath: String): RouteParseResult = RouteParser.parseRouteFile(filePath)
