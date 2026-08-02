@@ -1,43 +1,33 @@
 package com.logistics
 
-import com.logistics.dataholder.Package
-import com.logistics.utils.selectionSortPackages
+import com.logistics.dataholder.PackageRaw
+import com.logistics.sorter.selectionSortPackages
 
 import com.logistics.parsers.parseVehicleFile
-import com.logistics.parsers.parseRoute
-import com.logistics.parsers.parsePackagesFromCsv
-import java.io.File
+import com.logistics.parsers.parseRouteFile
+import com.logistics.parsers.PackageParser.parsePackageFile
+
 
 private const val PACKAGES_FILE_PATH = "src/main/resources/packages.csv"
 private const val ROUTES_FILE_PATH = "src/main/resources/routes.csv"
 private const val FLEET_FILE_PATH = "src/main/resources/fleet.csv"
 private const val TOP_PACKAGES_DISPLAY_LIMIT = 3
 
-fun main() {
-    // 1. Load and parse data
-    val validPackages = loadPackages(PACKAGES_FILE_PATH)
-    val routesData = parseRoute(ROUTES_FILE_PATH)
-    val (validFleet, fleetWarnings) = parseVehicleFile(FLEET_FILE_PATH)
 
-    // 2. Display summary
+fun main() {
+
+    val packages = parsePackageFile(PACKAGES_FILE_PATH)
+    val routes = parseRouteFile(ROUTES_FILE_PATH)
+    val vehicles = parseVehicleFile(FLEET_FILE_PATH)
+
     printSummary(
-        packagesCount = validPackages.size,
-        routesCount = routesData.routes.size,
-        fleetCount = validFleet.size
+        packagesCount = packages.packages.size,
+        routesCount = routes.routes.size,
+        fleetCount = vehicles.vehicles.size
     )
 
-    // 3. Process and display top packages
-    val sortedPackages = selectionSortPackages(validPackages)
-    printTopPackages(sortedPackages, TOP_PACKAGES_DISPLAY_LIMIT)
-}
-
-/**
- * Safely opens the file, parses the packages, and ensures the stream is closed afterward.
- */
-private fun loadPackages(filePath: String): List<Package> {
-    return File(filePath).inputStream().use { stream ->
-        parsePackagesFromCsv(stream)
-    }
+    val sortedPackages = selectionSortPackages(packages.packages)
+    printTopPackages(sortedPackages)
 }
 
 private fun printSummary(packagesCount: Int, routesCount: Int, fleetCount: Int) {
@@ -46,16 +36,15 @@ private fun printSummary(packagesCount: Int, routesCount: Int, fleetCount: Int) 
     println("Fleet parsed: $fleetCount\n")
 }
 
-private fun printTopPackages(packages: List<Package>, limit: Int) {
-    println("=== Top $limit ===")
+private fun printTopPackages(packages: List<PackageRaw>) {
+    println("=== Top $TOP_PACKAGES_DISPLAY_LIMIT ===")
 
-    packages.take(limit).forEachIndexed { index, pkg ->
-        // Using a multiline string with trimMargin() is cleaner than multiple println() statements
+    packages.take(TOP_PACKAGES_DISPLAY_LIMIT).forEachIndexed { index, pkg ->
         val output = """
             |${index + 1}. ${pkg.packageId}
             |${pkg.priority}
-            |Weight: ${pkg.weight}
-            |Destination: ${pkg.destinationHub}
+            |Weight: ${pkg.weightKg}
+            |Destination hub id: ${pkg.destinationHubId}
         """.trimMargin()
 
         println(output)

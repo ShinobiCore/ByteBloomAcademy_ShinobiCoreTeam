@@ -1,9 +1,9 @@
 package com.logistics.dataholder
 
 enum class Priority {
-    URGENT,
+    LOW,
     STANDARD,
-    LOW
+    URGENT
 }
 
 data class PackageRaw(

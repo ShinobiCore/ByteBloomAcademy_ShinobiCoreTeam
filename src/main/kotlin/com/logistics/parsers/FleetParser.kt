@@ -1,26 +1,21 @@
 package com.logistics.parsers
 
-import com.logistics.dataholder.Vehicle
+import com.logistics.dataholder.VehicleParseResult
+import com.logistics.dataholder.VehicleRaw
 import java.io.File
 
 private const val EXPECTED_COLUMN_COUNT = 4
-private const val VEHICLE_ID_PREFIX = "TRK-"
 private const val INVALID_NUMBER_FALLBACK = -1.0
 
-/**
- * Parses a CSV file containing vehicle data and converts it into a list of [Vehicle] objects.
- * Returns a Pair where:
- * - first: List of valid Vehicle objects.
- * - second: List of warning messages for skipped rows.
- */
-fun parseVehicleFile(filePath: String): Pair<List<Vehicle>, List<String>> {
+fun parseVehicleFile(filePath: String): VehicleParseResult {
     val file = File(filePath)
 
     if (!file.exists()) {
-        return Pair(emptyList(), listOf("Critical Error: File '$filePath' not found."))
+        val criticalWarning = "Critical Error: File '$filePath' not found."
+        return VehicleParseResult(emptyList(), listOf(criticalWarning))
     }
 
-    val validVehicles = mutableListOf<Vehicle>()
+    val vehicleRaws = mutableListOf<VehicleRaw>()
     val warnings = mutableListOf<String>()
 
     file.useLines { lines ->
@@ -31,7 +26,7 @@ fun parseVehicleFile(filePath: String): Pair<List<Vehicle>, List<String>> {
             return@useLines
         }
 
-        iterator.next() // Skip header row
+        iterator.next()
 
         var lineNumber = 2
         for (line in iterator) {
@@ -40,31 +35,23 @@ fun parseVehicleFile(filePath: String): Pair<List<Vehicle>, List<String>> {
                 continue
             }
 
-            // Extract row parsing to keep the main loop readable
-            val vehicle = parseSingleRow(line, lineNumber, warnings)
-            if (vehicle != null) {
-                validVehicles.add(vehicle)
+            val parsedRow = parseSingleRow(line, lineNumber, warnings)
+            if (parsedRow != null) {
+                vehicleRaws.add(parsedRow)
             }
 
             lineNumber++
         }
     }
 
-    return Pair(validVehicles, warnings)
+    return VehicleParseResult(vehicleRaws, warnings)
 }
 
-/**
- * Attempts to parse a single CSV row into a vehicle object.
- * Modifies the [warnings] list directly if validation fails (acting as an error collector).
- *
- * @return A valid [Vehicle] object, or null if the row is invalid.
- */
-private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<String>): Vehicle? {
+private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<String>): VehicleRaw? {
     val columns = line.split(",")
         .map { it.trim() }
         .dropLastWhile { it.isEmpty() }
 
-    // Guard clauses enforce fast failure and prevent deep nesting
     if (columns.size != EXPECTED_COLUMN_COUNT) {
         warnings.add("Warning at line $lineNumber: Invalid column count (${columns.size} instead of $EXPECTED_COLUMN_COUNT). Skipped.")
         return null
@@ -73,23 +60,15 @@ private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<
     val (vehicleIdRaw, hubIdRaw, capacityRaw, costRaw) = columns
 
     val vehicleId = vehicleIdRaw.uppercase()
-    if (!vehicleId.startsWith(VEHICLE_ID_PREFIX)) {
-        warnings.add("Warning at line $lineNumber: Invalid Vehicle ID '$vehicleId'. Skipped.")
-        return null
-    }
 
     if (hubIdRaw.isBlank()) {
-        warnings.add("Warning at line $lineNumber: Hub ID is empty. Skipped.")
+        warnings.add("Warning at line $lineNumber: Hub ID is missing. Skipped.")
         return null
     }
+    val currentHubId = hubIdRaw.uppercase()
 
-    val capacity = capacityRaw.toDoubleOrNull() ?: INVALID_NUMBER_FALLBACK
-    if (capacity <= 0.0) {
-        warnings.add("Warning at line $lineNumber: Invalid max capacity '$capacityRaw'. Skipped.")
-        return null
-    }
-
+    val maxCapacityKg = capacityRaw.toDoubleOrNull() ?: INVALID_NUMBER_FALLBACK
     val costPerKm = costRaw.toDoubleOrNull() ?: INVALID_NUMBER_FALLBACK
 
-    return Vehicle(vehicleId, hubIdRaw, capacity, costPerKm)
+    return VehicleRaw(vehicleId, currentHubId, maxCapacityKg, costPerKm)
 }
