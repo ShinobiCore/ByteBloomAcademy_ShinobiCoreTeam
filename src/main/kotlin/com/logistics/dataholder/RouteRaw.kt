@@ -7,4 +7,7 @@ data class RouteRaw(
     val distanceKm: Double ,
     val typicalDelayMin : Int?
 )
-
+data class RouteParseResult(
+    val routes: List<RouteRaw>,
+    val warnings: List<String>
+)

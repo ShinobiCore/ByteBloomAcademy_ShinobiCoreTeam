@@ -5,3 +5,7 @@ data class Warehouse(
     val location: String,
     val capacity: Int
 )
+data class WarehouseParseResult(
+    val warehouses: List<Warehouse>,
+    val warnings: List<String>
+)
