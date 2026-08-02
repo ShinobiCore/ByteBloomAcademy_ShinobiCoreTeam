@@ -1,7 +1,7 @@
 package com.logistics.parsers
 
+import com.logistics.dataholder.Package
 import com.logistics.dataholder.PackageParseResult
-import com.logistics.dataholder.PackageRaw
 import com.logistics.dataholder.Priority
 import com.logistics.utils.CsvUtils
 
@@ -9,7 +9,7 @@ object PackageParser {
 
     fun parsePackageFile(filePath: String): PackageParseResult {
         val rawLines = CsvUtils.readLinesWithoutHeader(filePath)
-        val packages = mutableListOf<PackageRaw>()
+        val packages = mutableListOf<Package>()
         val warnings = mutableListOf<String>()
 
         for ((index, line) in rawLines.withIndex()) {
@@ -23,7 +23,7 @@ object PackageParser {
     private fun processLine(
         line: String,
         lineNumber: Int,
-        packages: MutableList<PackageRaw>,
+        packages: MutableList<Package>,
         warnings: MutableList<String>
     ) {
         if (line.isBlank()) return
@@ -42,13 +42,18 @@ object PackageParser {
         return tokens.size < 4 || tokens[0].isEmpty() || tokens[1].isEmpty()
     }
 
-    private fun buildPackageFromTokens(tokens: List<String>): PackageRaw {
+    private fun buildPackageFromTokens(tokens: List<String>): Package {
         val packageId = tokens[0]
         val hubId = tokens[1]
-        val weight = CsvUtils.parseSafeDouble(tokens[2])
-        val priority = parsePriority(tokens[3])
+        val priority = parsePriority(tokens[2])
+        val weight = CsvUtils.parseSafeDouble(tokens[3])
 
-        return PackageRaw(packageId, hubId, weight, priority)
+        return Package(
+            packageId = packageId,
+            destinationHub = hubId,
+            priority = priority,
+            weight = weight
+        )
     }
 
     private fun parsePriority(rawPriority: String): Priority {

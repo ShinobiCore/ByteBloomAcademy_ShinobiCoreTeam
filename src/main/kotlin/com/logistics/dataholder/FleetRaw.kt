@@ -12,3 +12,7 @@ data class VehicleRaw(
     val maxCapacityKg: Double,
     val costPerKm: Double
 )
+data class FleetParseResult(
+    val vehicles: List<Vehicle>,
+    val warnings: List<String>
+)

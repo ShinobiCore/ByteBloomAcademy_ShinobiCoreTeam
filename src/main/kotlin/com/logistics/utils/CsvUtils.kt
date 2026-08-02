@@ -17,7 +17,11 @@ object CsvUtils {
     }
 
     fun parseSafeDouble(value: String): Double {
-        return value.toDoubleOrNull() ?: -1.0
+        val cleaned = value.removeSuffix("km").trim()
+        return cleaned.toDoubleOrNull() ?: -1.0
+    }
+    fun parseSafeInt(value: String): Int? {
+        return value.trim().toIntOrNull()
     }
 
     fun isBlankLine(line: String): Boolean = line.trim().isEmpty()
