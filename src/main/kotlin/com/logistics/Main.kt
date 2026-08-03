@@ -12,7 +12,6 @@ private const val PACKAGES_FILE_PATH = "src/main/resources/packages.csv"
 private const val WAREHOUSES_FILE_PATH = "src/main/resources/warehouses.csv"
 private const val ROUTES_FILE_PATH = "src/main/resources/routes.csv"
 private const val FLEET_FILE_PATH = "src/main/resources/fleet.csv"
-private const val WAREHOUSES_FILE_PATH = "src/main/resources/warehouses.csv"
 private const val TOP_PACKAGES_DISPLAY_LIMIT = 3
 
 fun main() {
@@ -74,7 +73,7 @@ private fun printTopPackages(packages: List<PackageRaw>, limit: Int) {
 
     packages.take(limit).forEachIndexed { index, pkg ->
         val output = """
-           ||----- ${index + 1} -----
+           ||----------- ${index + 1} -----------
            || ${pkg.id}
            || Priority: ${pkg.priority} | Weight: ${pkg.weight} kg
            || origin : ${pkg.originWarehouseId} | Destination: ${pkg.destinationWarehouseId}
