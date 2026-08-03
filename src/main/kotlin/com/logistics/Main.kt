@@ -77,7 +77,6 @@ private fun printSummary(packagesCount: Int, routesCount: Int, fleetCount: Int, 
     println("Routes parsed: $routesCount")
     println("Fleet parsed: $fleetCount")
     println("Warehouses parsed: $warehousesCount\n")
-
 }
 
 private fun printTopPackages(packages: List<PackageRaw>, limit: Int) {
@@ -85,7 +84,7 @@ private fun printTopPackages(packages: List<PackageRaw>, limit: Int) {
 
     packages.take(limit).forEachIndexed { index, pkg ->
         val output = """
-           ||----- ${index + 1} -----
+           ||----------- ${index + 1} -----------
            || ${pkg.id}
            || Priority: ${pkg.priority} | Weight: ${pkg.weight} kg
            || origin : ${pkg.originWarehouseId} | Destination: ${pkg.destinationWarehouseId}
