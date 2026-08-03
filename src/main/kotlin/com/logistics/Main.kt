@@ -14,7 +14,7 @@ private const val WAREHOUSES_FILE_PATH = "src/main/resources/warehouses.csv"
 private const val TOP_PACKAGES_DISPLAY_LIMIT = 3
 
 fun main() {
-    // 1. Load and parse data
+
     val packageResult = PackageParser.parsePackageFile(PACKAGES_FILE_PATH)
     val routeResult = RouteParser.parseRouteFile(ROUTES_FILE_PATH)
     val fleetResult = FleetParser.parseVehicleFile(FLEET_FILE_PATH)
@@ -28,7 +28,7 @@ fun main() {
         warehousesCount = warehouseResult.warehouses.size
     )
 
-    // 3. Process and display top packages
+
     val sortedPackages = selectionSortPackages(packageResult.packages)
     printTopPackages(sortedPackages, TOP_PACKAGES_DISPLAY_LIMIT)
 }

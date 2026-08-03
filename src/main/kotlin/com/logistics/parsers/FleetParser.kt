@@ -71,7 +71,7 @@ object FleetParser {
     }
 }
 
-// دالة توافقية مع Main القديم
+
 fun parseVehicleFile(filePath: String): Pair<List<Vehicle>, List<String>> {
     val result = FleetParser.parseVehicleFile(filePath)
     return Pair(result.vehicles, result.warnings)

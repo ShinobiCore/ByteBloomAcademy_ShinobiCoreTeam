@@ -13,7 +13,6 @@ data class Package(
     val weight: Double
 )
 
-//  تأكد من تسمية القائمة بـ packages هنا بالضبط:
 data class PackageParseResult(
     val packages: List<Package>,
     val warnings: List<String>

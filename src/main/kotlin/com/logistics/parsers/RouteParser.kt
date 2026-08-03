@@ -71,5 +71,5 @@ object RouteParser {
     }
 }
 
-// دالة توافقية مع Main القديم
+
 fun parseRoute(filePath: String): RouteParseResult = RouteParser.parseRouteFile(filePath)
