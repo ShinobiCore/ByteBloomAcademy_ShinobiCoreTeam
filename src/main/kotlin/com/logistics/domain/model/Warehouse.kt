@@ -3,38 +3,36 @@ package com.logistics.domain.model
 class Warehouse(
     val id: String,
     val name: String,
-    val regionalZone: String
+    val regionalZone: String,
+    val latitude: Double,
+    val longitude: Double
 ) {
+    private val mutableCargoQueue = mutableListOf<Package>()
+    private val mutableOutgoingRoutes = mutableListOf<Route>()
+    private val mutableStationedVehicles = mutableListOf<Vehicle>()
 
-    private val _cargoQueue = mutableListOf<Package>()
-    val cargoQueue: List<Package> get() = _cargoQueue
+    val cargoQueue: List<Package>
+        get() = mutableCargoQueue
 
-    private val _outgoingRoutes = mutableListOf<Route>()
-    val outgoingRoutes: List<Route> get() = _outgoingRoutes
+    val outgoingRoutes: List<Route>
+        get() = mutableOutgoingRoutes
 
-    private val _stationedVehicles = mutableListOf<Vehicle>()
-    val stationedVehicles: List<Vehicle> get() = _stationedVehicles
+    val stationedVehicles: List<Vehicle>
+        get() = mutableStationedVehicles
 
-    // Encapsulated Mutators
-    fun addPackage(pkg: Package) {
-        _cargoQueue.add(pkg)
-        pkg.origin = this
-    }
-
-    fun removePackage(pkg: Package): Boolean {
-        return _cargoQueue.remove(pkg)
+    fun addPackage(packageItem: Package) {
+        mutableCargoQueue.add(packageItem)
     }
 
     fun addRoute(route: Route) {
-        _outgoingRoutes.add(route)
+        mutableOutgoingRoutes.add(route)
     }
 
     fun addVehicle(vehicle: Vehicle) {
-        _stationedVehicles.add(vehicle)
-        vehicle.currentHub = this
+        mutableStationedVehicles.add(vehicle)
     }
 
-    override fun toString(): String {
-        return "Warehouse(id='$id', name='$name', zone='$regionalZone', cargoCount=${_cargoQueue.size})"
-    }
+//    fun sortCargoQueueByWeightDescending() {
+//
+//    }
 }

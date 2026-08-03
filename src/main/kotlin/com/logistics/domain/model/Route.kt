@@ -1,6 +1,6 @@
 package com.logistics.domain.model
 
-data class Route(
+class Route(
     val routeId: String,
     val distanceKm: Double,
     val typicalDelayMin: Int,

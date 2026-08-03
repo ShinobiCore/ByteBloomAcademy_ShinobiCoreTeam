@@ -1,15 +1,14 @@
-package com.logistics.parsers
+package com.logistics.data.parser
 
-import com.logistics.dataholder.Package
-import com.logistics.dataholder.PackageParseResult
-import com.logistics.dataholder.Priority
+import com.logistics.data.raw.PackageRaw
+import com.logistics.domain.model.Priority
 import com.logistics.utils.CsvUtils
 
 object PackageParser {
 
-    fun parsePackageFile(filePath: String): PackageParseResult {
+    fun parsePackageFile(filePath: String): ParseResult<PackageRaw> {
         val rawLines = CsvUtils.readLinesWithoutHeader(filePath)
-        val packages = mutableListOf<Package>()
+        val packages = mutableListOf<PackageRaw>()
         val warnings = mutableListOf<String>()
 
         for ((index, line) in rawLines.withIndex()) {
@@ -17,13 +16,13 @@ object PackageParser {
             processLine(line, lineNumber, packages, warnings)
         }
 
-        return PackageParseResult(packages, warnings)
+        return ParseResult(packages, warnings)
     }
 
     private fun processLine(
         line: String,
         lineNumber: Int,
-        packages: MutableList<Package>,
+        packages: MutableList<PackageRaw>,
         warnings: MutableList<String>
     ) {
         if (line.isBlank()) return
@@ -39,20 +38,22 @@ object PackageParser {
     }
 
     private fun isColumnMismatch(tokens: List<String>): Boolean {
-        return tokens.size < 4 || tokens[0].isEmpty() || tokens[1].isEmpty()
+        return tokens.size < 5 || tokens[0].isEmpty() || tokens[1].isEmpty()
     }
 
-    private fun buildPackageFromTokens(tokens: List<String>): Package {
+    private fun buildPackageFromTokens(tokens: List<String>): PackageRaw {
         val packageId = tokens[0]
-        val hubId = tokens[1]
-        val priority = parsePriority(tokens[2])
-        val weight = CsvUtils.parseSafeDouble(tokens[3])
+        val weight = CsvUtils.parseSafeDouble(tokens[1])
+        val originWarehouseId = tokens[2]
+        val destinationWarehouseId = tokens[3]
+        val priority = Priority.fromText(tokens[4])
 
-        return Package(
-            packageId = packageId,
-            destinationHub = hubId,
+        return PackageRaw(
+            id = packageId,
+            weight = weight,
             priority = priority,
-            weight = weight
+            originWarehouseId = originWarehouseId,
+            destinationWarehouseId = destinationWarehouseId
         )
     }
 

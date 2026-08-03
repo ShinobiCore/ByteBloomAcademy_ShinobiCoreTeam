@@ -1,28 +1,27 @@
-package com.logistics.parsers
+package com.logistics.data.parser
 
-import com.logistics.dataholder.FleetParseResult
-import com.logistics.dataholder.Vehicle
+import com.logistics.data.raw.VehicleRaw
 import com.logistics.utils.CsvUtils
 import java.io.File
 
-object FleetParser {
+object VehicleParser {
 
     private const val EXPECTED_COLUMN_COUNT = 4
     private const val VEHICLE_ID_PREFIX = "TRK-"
 
-    fun parseVehicleFile(filePath: String): FleetParseResult {
+    fun parseVehicleFile(filePath: String): ParseResult<VehicleRaw> {
         val file = File(filePath)
 
         if (!file.exists()) {
-            return FleetParseResult(emptyList(), listOf("Critical Error: File '$filePath' not found."))
+            return ParseResult(emptyList(), listOf("Critical Error: File '$filePath' not found."))
         }
 
-        val validVehicles = mutableListOf<Vehicle>()
+        val validVehicles = mutableListOf<VehicleRaw>()
         val warnings = mutableListOf<String>()
 
         val lines = file.readLines()
         if (lines.isEmpty()) {
-            return FleetParseResult(emptyList(), listOf("Warning: File '$filePath' is empty."))
+            return ParseResult(emptyList(), listOf("Warning: File '$filePath' is empty."))
         }
 
         for ((index, line) in lines.drop(1).withIndex()) {
@@ -35,10 +34,10 @@ object FleetParser {
             }
         }
 
-        return FleetParseResult(validVehicles, warnings)
+        return ParseResult(validVehicles, warnings)
     }
 
-    private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<String>): Vehicle? {
+    private fun parseSingleRow(line: String, lineNumber: Int, warnings: MutableList<String>): VehicleRaw? {
         val columns = CsvUtils.splitAndTrim(line)
 
         if (columns.size != EXPECTED_COLUMN_COUNT) {
@@ -67,12 +66,6 @@ object FleetParser {
 
         val costPerKm = CsvUtils.parseSafeDouble(costRaw)
 
-        return Vehicle(vehicleId, hubIdRaw, capacity, costPerKm)
+        return VehicleRaw(vehicleId, capacity, costPerKm, hubIdRaw)
     }
-}
-
-
-fun parseVehicleFile(filePath: String): Pair<List<Vehicle>, List<String>> {
-    val result = FleetParser.parseVehicleFile(filePath)
-    return Pair(result.vehicles, result.warnings)
 }
