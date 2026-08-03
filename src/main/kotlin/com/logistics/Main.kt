@@ -12,6 +12,7 @@ private const val PACKAGES_FILE_PATH = "src/main/resources/packages.csv"
 private const val WAREHOUSES_FILE_PATH = "src/main/resources/warehouses.csv"
 private const val ROUTES_FILE_PATH = "src/main/resources/routes.csv"
 private const val FLEET_FILE_PATH = "src/main/resources/fleet.csv"
+private const val WAREHOUSES_FILE_PATH = "src/main/resources/warehouses.csv"
 private const val TOP_PACKAGES_DISPLAY_LIMIT = 3
 
 fun main() {
@@ -66,7 +67,6 @@ private fun printSummary(packagesCount: Int, routesCount: Int, fleetCount: Int, 
     println("Routes parsed: $routesCount")
     println("Fleet parsed: $fleetCount")
     println("Warehouses parsed: $warehousesCount\n")
-
 }
 
 private fun printTopPackages(packages: List<PackageRaw>, limit: Int) {
