@@ -21,11 +21,11 @@ class FragileStrategy : DispatchStrategy {
         return distanceAdjustedCost + safetyFee
     }
 
+
     override fun getPriorityMultiplier(
         packageItem: Package
     ): Double {
         return when (packageItem.priority) {
-
             Priority.STANDARD -> 1.0
             Priority.URGENT -> 1.1
             Priority.LOW -> 1.2
