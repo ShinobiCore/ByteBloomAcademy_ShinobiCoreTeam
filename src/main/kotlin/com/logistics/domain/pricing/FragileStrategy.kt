@@ -2,6 +2,7 @@ package com.logistics.domain.pricing
 
 import com.logistics.domain.strategy.DispatchStrategy
 import com.logistics.domain.model.Package
+import com.logistics.domain.model.Priority
 import com.logistics.domain.model.Route
 import com.logistics.domain.model.Vehicle
 
@@ -26,10 +27,9 @@ class FragileStrategy : DispatchStrategy {
     ): Double {
         return when (packageItem.priority) {
 
-            1 -> 1.0
-            2 -> 1.1
-            3 -> 1.2
-            else -> 1.0
+            Priority.STANDARD -> 1.0
+            Priority.URGENT -> 1.1
+            Priority.LOW -> 1.2
         }
     }
 }
