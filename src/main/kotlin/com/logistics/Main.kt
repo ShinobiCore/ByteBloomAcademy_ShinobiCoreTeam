@@ -9,6 +9,7 @@ import com.logistics.data.builder.DomainGraphBuilder
 import com.logistics.data.raw.PackageRaw
 import com.logistics.service.RoutePricingEngine
 import com.logistics.domain.strategy.EcoStrategy
+import com.logistics.domain.strategy.ExpressStrategy
 
 import java.util.Locale
 
@@ -47,6 +48,7 @@ fun main() {
         vehicleRawItems = vehicleRawItems
     )
 
+    domainGraph.warehouses.forEach { it.sortCargoQueueByWeightDescending() }
     val firstWarehouse = domainGraph.warehouses.firstOrNull {
         it.cargoQueue.isNotEmpty() && it.stationedVehicles.isNotEmpty() && it.outgoingRoutes.isNotEmpty()
     } ?: return
@@ -66,7 +68,12 @@ fun main() {
     val pricingEngine = RoutePricingEngine(EcoStrategy())
     val ecoCost = pricingEngine.calculateTransitCost(firstPackage, firstRoute, firstVehicle)
 
+    pricingEngine.updateStrategy(ExpressStrategy())
+    val expressCost = pricingEngine.calculateTransitCost(firstPackage, firstRoute, firstVehicle)
+
+    println("Runtime strategy switch:")
     println("Eco cost: ${formatMoney(ecoCost)}")
+    println("Express cost: ${formatMoney(expressCost)}")
 
 }
 

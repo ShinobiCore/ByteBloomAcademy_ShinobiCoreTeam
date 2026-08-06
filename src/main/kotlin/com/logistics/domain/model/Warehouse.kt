@@ -32,7 +32,7 @@ class Warehouse(
         mutableStationedVehicles.add(vehicle)
     }
 
-//    fun sortCargoQueueByWeightDescending() {
-//
-//    }
+    fun sortCargoQueueByWeightDescending() {
+        com.logistics.sorter.QuickSorter.sortPackagesByWeightDescending(mutableCargoQueue)
+    }
 }
